@@ -19,16 +19,16 @@ export default async function handler(req, res) {
 
     let client;
 
+    const connectionString = `mongodb+srv://${process.env.mongodb_username}:${process.env.mongodb_password}@${process.env.mongodb_clustername}.suim1u3.mongodb.net/?retryWrites=true&w=majority`;
+
     try {
-      client = await MongoClient.connect(
-        'mongodb+srv://mitol:0kQ6UJVhdtT1c8U8@eventsapp.suim1u3.mongodb.net/?retryWrites=true&w=majority',
-      );
+      client = await MongoClient.connect(connectionString);
     } catch (error) {
       res.status(500).json({ message: 'Could not connect to database.' });
       return;
     }
 
-    const db = client.db('blog');
+    const db = client.db(process.env.mongodb_database);
 
     try {
       const result = await db.collection('messages').insertOne(newMessage);
